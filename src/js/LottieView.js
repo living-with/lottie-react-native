@@ -10,12 +10,13 @@ import {
   requireNativeComponent,
   NativeModules,
 } from 'react-native';
+import Reanimated from 'react-native-reanimated';
 import SafeModule from 'react-native-safe-modules';
 import PropTypes from 'prop-types';
 
 
 const getNativeLottieViewForDesktop = () => {
-  return requireNativeComponent('LottieAnimationView') 
+  return requireNativeComponent('LottieAnimationView')
 }
 
 const NativeLottieView =
@@ -24,6 +25,7 @@ const NativeLottieView =
     SafeModule.component({ viewName: 'LottieAnimationView', mockComponent: View })
 
 const AnimatedNativeLottieView = Animated.createAnimatedComponent(NativeLottieView);
+const ReanimatedNativeLottieView = Reanimated.createAnimatedComponent(NativeLottieView);
 
 const LottieViewManager = Platform.select({
   // react-native-windows doesn't work with SafeModule, it always returns the mock component
@@ -207,21 +209,34 @@ class LottieView extends React.PureComponent {
 
     const speed =
       this.props.duration && sourceJson && this.props.source.fr
-        ? Math.round(this.props.source.op / this.props.source.fr * 1000 / this.props.duration)
+        ? Math.round(((this.props.source.op / this.props.source.fr) * 1000) / this.props.duration)
         : this.props.speed;
 
     return (
       <View style={[aspectRatioStyle, sizeStyle, style]}>
-        <AnimatedNativeLottieView
-          ref={this.refRoot}
-          {...rest}
-          speed={speed}
-          style={[aspectRatioStyle, sizeStyle || { width: '100%', height: '100%' }, style]}
-          sourceName={sourceName}
-          sourceJson={sourceJson}
-          onAnimationFinish={this.onAnimationFinish}
-          onLayout={this.onLayout}
-        />
+        {this.props.progress instanceof Reanimated.Node ? (
+          <ReanimatedNativeLottieView
+            ref={this.refRoot}
+            {...rest}
+            speed={speed}
+            style={[aspectRatioStyle, sizeStyle || { width: '100%', height: '100%' }, style]}
+            sourceName={sourceName}
+            sourceJson={sourceJson}
+            onAnimationFinish={this.onAnimationFinish}
+            onLayout={this.onLayout}
+          />
+        ) : (
+          <AnimatedNativeLottieView
+            ref={this.refRoot}
+            {...rest}
+            speed={speed}
+            style={[aspectRatioStyle, sizeStyle || { width: '100%', height: '100%' }, style]}
+            sourceName={sourceName}
+            sourceJson={sourceJson}
+            onAnimationFinish={this.onAnimationFinish}
+            onLayout={this.onLayout}
+          />
+        )}
       </View>
     );
   }
