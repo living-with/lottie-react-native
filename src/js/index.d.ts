@@ -1,3 +1,4 @@
+// Comment for test purpose
 declare module "lottie-react-native" {
   import type { Animated, StyleProp, ViewStyle, LayoutChangeEvent } from "react-native";
   import type Reanimated from "react-native-reanimated";
