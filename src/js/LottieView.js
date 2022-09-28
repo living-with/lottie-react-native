@@ -6,13 +6,13 @@ import {
   View,
   Platform,
   StyleSheet,
-  ViewPropTypes,
   requireNativeComponent,
   NativeModules,
 } from 'react-native';
 import Reanimated from 'react-native-reanimated';
 import SafeModule from 'react-native-safe-modules';
 import PropTypes from 'prop-types';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 
 const getNativeLottieViewForDesktop = () => {
